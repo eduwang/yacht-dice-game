@@ -12,6 +12,8 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "cannon": "^0.6.2",
+    "cannon-es": "^0.20.0",
     "gsap": "^3.13.0",
     "three": "^0.176.0"
   }

@@ -3,14 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Yacht Dice - 메인 보드</title>
-  <link rel="stylesheet" href="mainPlayBoard3D.css" />
+  <title>Yacht Dice - 메인 보드(3D)</title>
+  <link rel="stylesheet" href="/mainPlayBoard3D.css" />
   <script type="module" src="/mainPlayBoard3D.js"></script>
 
 </head>
 <body>
-  <h1>🎲 Yacht Dice Game</h1>
-  <div id="diceArea"></div> <!-- ✅ 공용 주사위 영역 추가 -->
+  <h1>🎲 Yacht Dice Game(3D Dice)</h1>
+  <div id="diceArea">
+    <!-- 🎲 Three.js 캔버스 -->
+    <canvas id="diceCanvas"></canvas>
+    <!-- 기존 텍스트 주사위 (diceUnicode) -->
+    <div id="shared-dice"></div>
+  </div>
   <div id="playersArea"></div>
 
 </body>

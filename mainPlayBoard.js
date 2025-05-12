@@ -12,7 +12,7 @@ for (const [key, value] of urlParams.entries()) {
 }
 
 const scoreCategories = [
-  "Aces (1)", "Twos (2)", "Threes (3)", "Fours (4)", "Fives (5)", "Sixes (6)",
+  "Aces (1)", "Twos (2)", "Threes (3)", "Fours (4)", "Fives (5)", "Sixes (6)", "Bonus",
   "Choice", "Four of a Kind", "Full House", "Small Straight", "Large Straight", "Yacht"
 ];
 
@@ -58,7 +58,7 @@ function renderDice() {
   });
 }
 
-function calculateScore(category, dice) {
+function calculateScore(category, dice, playerIndex = currentPlayer) {
   const counts = [0, 0, 0, 0, 0, 0];
   dice.forEach(d => counts[d - 1]++);
   const total = dice.reduce((a, b) => a + b, 0);
@@ -70,6 +70,14 @@ function calculateScore(category, dice) {
     case "Fours (4)": return counts[3] * 4;
     case "Fives (5)": return counts[4] * 5;
     case "Sixes (6)": return counts[5] * 6;
+    case "Bonus": {
+      const state = playerStates[playerIndex];
+      let upperTotal = 0;
+      ["Aces (1)", "Twos (2)", "Threes (3)", "Fours (4)", "Fives (5)", "Sixes (6)"].forEach(cat => {
+        if (state.scored[cat] !== undefined) upperTotal += state.scored[cat];
+      });
+      return upperTotal >= 63 ? 35 : 0;
+    };
     case "Choice": return total;
     case "Four of a Kind": return counts.some(c => c >= 4) ? total : 0;
     case "Full House": return counts.includes(3) && counts.includes(2) ? 25 : 0;
@@ -101,7 +109,7 @@ function updateScorePreview(playerIndex) {
     );
     if (state.locked[category]) return;
 
-    const score = calculateScore(category, dice);
+    const score = calculateScore(category, dice, playerIndex);
     cell.textContent = score;
     cell.style.color = "#aaa";
   });
@@ -136,6 +144,7 @@ players.forEach((name, index) => {
     "Fours (4)": "4의 눈만 더한 값",
     "Fives (5)": "5의 눈만 더한 값",
     "Sixes (6)": "6의 눈만 더한 값",
+    "Bonus": "Aces부터 Sixes까지의 합이 63이상",
     "Choice": "모든 주사위 눈의 합",
     "Four of a Kind": "같은 숫자 4개가 있으면 전체 합",
     "Full House": "3개+2개 세트면 25점",
@@ -221,6 +230,12 @@ document.querySelectorAll(".score-cell").forEach(cell => {
     const playerIndex = Number(cell.dataset.player);
     const category = cell.dataset.category;
     const state = playerStates[playerIndex];
+    if (
+      playerIndex !== currentPlayer ||
+      state.locked[category] ||
+      state.rollsLeft === 3 ||
+      category === "Bonus" // 🔒 Bonus는 수동 확정 방지
+    ) return;
 
     if (playerIndex !== currentPlayer || state.locked[category] || state.rollsLeft === 3) return;
 
@@ -233,6 +248,37 @@ document.querySelectorAll(".score-cell").forEach(cell => {
     setTimeout(() => cell.classList.remove("score-flash"), 600);
     cell.style.color = "white";
     cell.style.fontWeight = "bold";
+
+    // ✅ Bonus 자동 확정 (오직 Aces~Sixes가 모두 채워졌을 때만)
+    if (!state.locked["Bonus"]) {
+        const upperCategories = [
+          "Aces (1)", "Twos (2)", "Threes (3)",
+          "Fours (4)", "Fives (5)", "Sixes (6)"
+        ];
+
+        const allUpperLocked = upperCategories.every(cat => state.locked[cat]);
+
+        if (allUpperLocked) {
+          let upperTotal = upperCategories.reduce((sum, cat) => sum + (state.scored[cat] || 0), 0);
+          const bonusScore = upperTotal >= 63 ? 35 : 0;
+
+          state.scored["Bonus"] = bonusScore;
+          state.locked["Bonus"] = true;
+
+          const bonusCell = document.querySelector(`.score-cell[data-player="${playerIndex}"][data-category="Bonus"]`);
+          if (bonusCell) {
+            bonusCell.textContent = bonusScore;
+            bonusCell.style.color = "white";
+            bonusCell.style.fontWeight = "bold";
+            bonusCell.classList.add("score-flash");
+            setTimeout(() => bonusCell.classList.remove("score-flash"), 600);
+          }
+        }
+      }
+
+
+
+
 
     updateTotalScore(playerIndex);
 
