@@ -1,0 +1,185 @@
+/* 전체 레이아웃 및 타이포그래피 */
+body {
+  background-color: #111;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+/* 리셋 시 페이드 아웃 효과 */
+body.fade-out {
+  animation: fadeOut 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+
+h1 {
+  padding-top: 1rem;
+}
+
+/* 플레이어 영역 및 카드 */
+#playersArea {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.player-block {
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 10px;
+  width: 250px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* 현재 턴 강조 */
+.player-block.current-turn {
+  border: 2px solid #ffcc00;
+  box-shadow: 0 0 10px #ffcc00;
+}
+
+/* 버튼 */
+.roll-button {
+  margin-top: 10px;
+  background-color: #444;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.roll-button:hover {
+  background-color: #666;
+}
+
+/* 주사위 */
+.dice-display {
+  font-size: 2rem;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.die {
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.die:hover {
+  background-color: #333;
+}
+
+.die.held {
+  background-color: #ffcc00;
+  color: black;
+  font-weight: bold;
+}
+
+.die.animating {
+  transition: transform 0.1s;
+  transform: scale(1.2);
+}
+
+/* 점수판 */
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.score-table th,
+.score-table td {
+  border: 1px solid #555;
+  padding: 5px;
+  text-align: center;
+}
+
+.score-table td.score-cell {
+  background-color: #333;
+  cursor: pointer;
+}
+
+.score-table td.score-cell:hover {
+  background-color: #555;
+}
+
+.score-table .total-row td {
+  background-color: #000;
+  color: #ffcc00;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.score-total {
+  text-align: center;
+}
+
+/* 점수 입력 애니메이션 */
+.score-flash {
+  animation: flash 0.6s ease-out;
+}
+
+@keyframes flash {
+  0% { background-color: #ffcc00; color: black; }
+  100% { background-color: #333; color: white; }
+}
+
+/* 반응형 레이아웃 */
+@media (max-width: 768px) {
+  #playersArea {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .player-block {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .dice-display {
+    font-size: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .score-table th,
+  .score-table td {
+    font-size: 0.9rem;
+    padding: 4px;
+  }
+
+  .roll-button {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .roll-button {
+    width: 100%;
+  }
+
+  .player-block h2 {
+    font-size: 1.1rem;
+  }
+
+  .score-table th,
+  .score-table td {
+    font-size: 0.8rem;
+  }
+}

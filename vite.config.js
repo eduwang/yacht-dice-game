@@ -9,6 +9,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         mainPlayBoard: resolve(__dirname, 'mainPlayBoard.html'),
+        mainPlayBoard3D: resolve(__dirname, 'mainPlayBoard3D.html'),
       },
     },
   },

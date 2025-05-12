@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "three": "^0.176.0"
   }
 }
